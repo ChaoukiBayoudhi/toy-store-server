@@ -1,5 +1,8 @@
 package com.jee.tp.serveruser.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +21,7 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 
 @Table(name = "toy")
+//@JsonIgnoreProperties(ignoreUnknown=true)
 public class Toy {
     @Id @GeneratedValue
     private Long code;
@@ -28,7 +32,9 @@ public class Toy {
     private Integer maxAge;
     private Double price;
     @OneToMany(mappedBy = "toy", cascade = CascadeType.ALL)
-    private Set<customerLikes> ToysLiked=new HashSet<>();
+    @JsonManagedReference
+    @JsonIgnore
+    private Set<customerLikes> ToysLikedbyCust=new HashSet<>();
 
 
 
@@ -47,7 +53,7 @@ public class Toy {
         this.maxAge = maxAge;
         this.price = price;
         for(customerLikes cl : toysLiked) cl.setToy(this);
-        this.ToysLiked = Stream.of(toysLiked).collect(Collectors.toSet());
+        this.ToysLikedbyCust = Stream.of(toysLiked).collect(Collectors.toSet());
     }
 
     @Override
@@ -61,7 +67,7 @@ public class Toy {
                 Objects.equals(minAge, toy.minAge) &&
                 Objects.equals(maxAge, toy.maxAge) &&
                 Objects.equals(price, toy.price) &&
-                Objects.equals(ToysLiked, toy.ToysLiked);
+                Objects.equals(ToysLikedbyCust, toy.ToysLikedbyCust);
     }
 
     @Override
@@ -79,5 +85,9 @@ public class Toy {
                 ", maxAge=" + maxAge +
                 ", price=" + price +
                 '}';
+    }
+
+    public String getType() {
+        return this.type;
     }
 }

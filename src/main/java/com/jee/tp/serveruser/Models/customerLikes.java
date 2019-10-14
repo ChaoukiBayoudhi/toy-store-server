@@ -1,5 +1,7 @@
 package com.jee.tp.serveruser.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,11 +37,13 @@ public class customerLikes implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
     private Toy toy;
 
     @Id
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
     private Customer liker;
 
     public customerLikes(Customer liker) {

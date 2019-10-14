@@ -1,5 +1,7 @@
 package com.jee.tp.serveruser.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +28,7 @@ public class Customer {
     private LocalDate BirthDay;
 
     @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<customerLikes> ToysLiked=new HashSet<>();
 
 
