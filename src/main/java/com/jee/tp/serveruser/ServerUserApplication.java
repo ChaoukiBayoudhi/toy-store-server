@@ -1,24 +1,14 @@
 package com.jee.tp.serveruser;
 
-import com.jee.tp.serveruser.Models.Customer;
 import com.jee.tp.serveruser.Models.Toy;
-import com.jee.tp.serveruser.Models.customerLikes;
-import com.jee.tp.serveruser.Repositories.customerRepository;
 import com.jee.tp.serveruser.Repositories.toyRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,22 +67,22 @@ public class ServerUserApplication {
 ////	}
 //
 //
-//	@Bean
-//	ApplicationRunner showAll(toyRepository repository){
-//		return args -> {
-//			repository.findAll().forEach(System.out::println);
-//			Sort sort= new Sort(Sort.Direction.DESC,"name");
-//			List<Toy> lst=repository.findByNameSorted("%l_",sort);
-//
-//			Stream.of(lst)
+@Bean
+ApplicationRunner showAll(toyRepository repository) {
+    return args -> {
+        repository.findAll().forEach(System.out::println);
+        Sort sort = new Sort(Sort.Direction.DESC, "name");
+        List<Toy> lst = repository.findByNameSorted("%l_", sort);
+
+        Stream.of(lst)
+                .forEach(System.out::println);
+        System.out.println();
+//			repository.findByNameAndTypeAsStream("Moto", "Electronic")
 //					.forEach(System.out::println);
-//			System.out.println();
-////			repository.findByNameAndTypeAsStream("Moto", "Electronic")
-////					.forEach(System.out::println);
-//
-//
-//		};
-//	}
+
+
+    };
+}
 //	@Bean
 //	ApplicationRunner ShowCustomersByPage(customerRepository custRepo)
 //	{
