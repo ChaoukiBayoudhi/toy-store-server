@@ -1,12 +1,9 @@
 package com.jee.tp.serveruser.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -27,9 +24,11 @@ public class Customer {
     //@Temporal(TemporalType.DATE) //if the field is of Date type
     private LocalDate BirthDay;
 
-    @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<customerLikes> ToysLiked=new HashSet<>();
+    // @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
+    //@JsonManagedReference
+    @ManyToMany(mappedBy = "customersLikedToy")
+
+    private Set<Toy> ToysLiked = new HashSet<>();
 
 
 

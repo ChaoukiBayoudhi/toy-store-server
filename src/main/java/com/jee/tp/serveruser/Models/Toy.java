@@ -1,8 +1,9 @@
 package com.jee.tp.serveruser.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -13,8 +14,7 @@ import java.util.stream.Stream;
 
 @Entity
 
-@Getter
-@Setter
+
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -30,10 +30,23 @@ public class Toy {
     private Integer minAge;
     private Integer maxAge;
     private Double price;
-    @OneToMany(mappedBy = "toy", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    @JsonIgnore
-    private Set<customerLikes> ToysLikedbyCust=new HashSet<>();
+    //@OneToMany(mappedBy = "toy", cascade = CascadeType.ALL)
+    //@JsonManagedReference
+    //@JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "Toyes_LikesBy_Customers",
+            joinColumns =
+            @JoinColumn(name = "toy_code", referencedColumnName = "code"),
+            inverseJoinColumns =
+            @JoinColumn(name = "customer_id", referencedColumnName = "Id")
+    )
+    private Set<Customer> customersLikedToy = new HashSet<>();
+
+
+    @ManyToOne
+    @JoinColumn(name = "toyProvider_id")
+    private toyProvider toyprovider;
+
 
 
 
@@ -45,14 +58,24 @@ public class Toy {
         this.price = price;
     }
 
-    public Toy(@NonNull String name, @NonNull String type, Integer minAge, Integer maxAge, Double price, customerLikes... toysLiked) {
+    public Toy(@NonNull String name, @NonNull String type, Integer minAge, Integer maxAge, Double price, Customer... custLikedToy) {
         this.name = name;
         this.type = type;
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.price = price;
-        for(customerLikes cl : toysLiked) cl.setToy(this);
-        this.ToysLikedbyCust = Stream.of(toysLiked).collect(Collectors.toSet());
+        //for(Customer cl : custLikedToy) cl.setToy(this);
+        this.customersLikedToy = Stream.of(custLikedToy).collect(Collectors.toSet());
+    }
+
+    public Toy(@NonNull String name, @NonNull String type, Integer minAge, Integer maxAge, Double price, Set<Customer> customersLikedToy, toyProvider toyprovider) {
+        this.name = name;
+        this.type = type;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.price = price;
+        this.customersLikedToy = customersLikedToy;
+        this.toyprovider = toyprovider;
     }
 
     @Override
@@ -65,9 +88,9 @@ public class Toy {
                 type.equals(toy.type) &&
                 Objects.equals(minAge, toy.minAge) &&
                 Objects.equals(maxAge, toy.maxAge) &&
-                Objects.equals(price, toy.price) &&
-                Objects.equals(ToysLikedbyCust, toy.ToysLikedbyCust);
+                Objects.equals(price, toy.price);
     }
+
 
     @Override
     public int hashCode() {
@@ -134,11 +157,27 @@ public class Toy {
         this.price = price;
     }
 
-    public Set<customerLikes> getToysLikedbyCust() {
-        return ToysLikedbyCust;
+    public Set<Customer> getToysLikedbyCust() {
+        return customersLikedToy;
     }
 
-    public void setToysLikedbyCust(Set<customerLikes> toysLikedbyCust) {
-        ToysLikedbyCust = toysLikedbyCust;
+    public void setToysLikedbyCust(Set<Customer> toysLikedbyCust) {
+        customersLikedToy = toysLikedbyCust;
+    }
+
+    public Set<Customer> getCustomersLikedToy() {
+        return customersLikedToy;
+    }
+
+    public void setCustomersLikedToy(Set<Customer> customersLikedToy) {
+        this.customersLikedToy = customersLikedToy;
+    }
+
+    public toyProvider getToyprovider() {
+        return toyprovider;
+    }
+
+    public void setToyprovider(toyProvider toyprovider) {
+        this.toyprovider = toyprovider;
     }
 }

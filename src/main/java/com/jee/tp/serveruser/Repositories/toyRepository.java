@@ -12,10 +12,11 @@ import java.util.List;
 @RepositoryRestResource
 public interface toyRepository extends JpaRepository<Toy, Long>,toyCustomRepository, PagingAndSortingRepository<Toy, Long> {
 
-
+    @Query("from Toy where price < ?1")
    List<Toy> findByPriceLessThan(double price);
-    @Query("FROM Toy WHERE name like ?1")
-    List<Toy> findByNameSorted(String Name, Sort sort);
+
+    @Query("FROM Toy")
+    List<Toy> findByNameSorted(Sort sort);
 
 
 }
