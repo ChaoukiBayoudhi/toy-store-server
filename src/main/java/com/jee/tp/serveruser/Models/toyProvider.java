@@ -21,12 +21,23 @@ public class toyProvider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private @NonNull String name;
-    private String address;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
 
     @OneToMany(mappedBy = "toyprovider", cascade = CascadeType.ALL)
     private Set<Toy> Toys = new HashSet<>();
 
-    public toyProvider(@NonNull String name, String address, Set<Toy> toys) {
+
+    public toyProvider(@NonNull String name, Set<Toy> toys) {
+        this.name = name;
+        Toys = toys;
+    }
+
+    public toyProvider(@NonNull String name, Address address, Set<Toy> toys) {
         this.name = name;
         this.address = address;
         Toys = toys;

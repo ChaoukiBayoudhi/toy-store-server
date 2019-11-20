@@ -31,7 +31,6 @@ public class Customer {
     private Set<Toy> ToysLiked = new HashSet<>();
 
 
-
     public Customer(@NonNull String name, @NonNull LocalDate birthDay) {
         Name = name;
         BirthDay = birthDay;

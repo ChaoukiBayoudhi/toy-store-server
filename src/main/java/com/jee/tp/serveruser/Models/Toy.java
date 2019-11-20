@@ -30,9 +30,16 @@ public class Toy {
     private Integer minAge;
     private Integer maxAge;
     private Double price;
+
+
+    @Lob
+    private Byte[] image;
+
     //@OneToMany(mappedBy = "toy", cascade = CascadeType.ALL)
     //@JsonManagedReference
     //@JsonIgnore
+
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "Toyes_LikesBy_Customers",
             joinColumns =
@@ -46,8 +53,6 @@ public class Toy {
     @ManyToOne
     @JoinColumn(name = "toyProvider_id")
     private toyProvider toyprovider;
-
-
 
 
     public Toy(@NonNull String name, @NonNull String type, Integer minAge, Integer maxAge, Double price) {
@@ -74,6 +79,17 @@ public class Toy {
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.price = price;
+        this.customersLikedToy = customersLikedToy;
+        this.toyprovider = toyprovider;
+    }
+
+    public Toy(@NonNull String name, @NonNull String type, Integer minAge, Integer maxAge, Double price, Byte[] image, Set<Customer> customersLikedToy, toyProvider toyprovider) {
+        this.name = name;
+        this.type = type;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.price = price;
+        this.image = image;
         this.customersLikedToy = customersLikedToy;
         this.toyprovider = toyprovider;
     }
@@ -179,5 +195,13 @@ public class Toy {
 
     public void setToyprovider(toyProvider toyprovider) {
         this.toyprovider = toyprovider;
+    }
+
+    public Byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(Byte[] image) {
+        this.image = image;
     }
 }

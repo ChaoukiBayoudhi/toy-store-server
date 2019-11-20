@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/toyStore")
 public class toyController {
@@ -26,7 +25,6 @@ public class toyController {
     // for various logging APIs, most notably for log4j,
     // logback and JDK 1.4+ logging.
     private final Logger log = LoggerFactory.getLogger(toyController.class);
-
     //This annotation allows Spring to resolve and inject
     // collaborating beans into your bean
     @Autowired
@@ -56,7 +54,8 @@ public class toyController {
     @GetMapping("/toy/{id}")
     public ResponseEntity<?> getToyById(@PathVariable("id") long id) {
         Optional<Toy> toy = repository.findById(id);
-        return toy.map(response -> ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return toy.map(response -> ResponseEntity.ok().body(response))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
@@ -206,5 +205,39 @@ public class toyController {
                 .sorted(Comparator.comparing(Toy::getType))
                 .collect(Collectors.toList());
     }
+
+//    @PostMapping("recipe/{id}/image")
+//    public String handleImagePost(@PathVariable String id, @RequestParam("imagefile") MultipartFile file){
+//
+//        imageService.saveImageFile(Long.valueOf(id), file);
+//
+//        return "redirect:/recipe/" + id + "/show";
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void saveImageFile(Long recipeId, MultipartFile file) {
+//
+//        try {
+//            Recipe recipe = recipeRepository.findById(recipeId).get();
+//
+//            Byte[] byteObjects = new Byte[file.getBytes().length];
+//
+//            int i = 0;
+//
+//            for (byte b : file.getBytes()){
+//                byteObjects[i++] = b;
+//            }
+//
+//            recipe.setImage(byteObjects);
+//
+//            recipeRepository.save(recipe);
+//        } catch (IOException e) {
+//            //todo handle better
+//            log.error("Error occurred", e);
+//
+//            e.printStackTrace();
+//        }
+//    }
 
 }
