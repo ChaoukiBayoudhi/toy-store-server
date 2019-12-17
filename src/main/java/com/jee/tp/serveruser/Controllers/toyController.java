@@ -19,11 +19,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 @RestController
-@RequestMapping("/toyStore")
+@RequestMapping("/toys")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class toyController {
     //The LoggerFactory is a utility class producing Loggers
     // for various logging APIs, most notably for log4j,
     // logback and JDK 1.4+ logging.
+    //defined in Slf4j
     private final Logger log = LoggerFactory.getLogger(toyController.class);
     //This annotation allows Spring to resolve and inject
     // collaborating beans into your bean
@@ -35,36 +38,27 @@ public class toyController {
         this.repository = repository;
     }
 
-    @GetMapping("/allElectonictoys")
-    public Collection<Toy> allElectonicToys() {
-        return repository.findAll().stream()
-                .filter(this::isElectronicToys)
-                .collect(Collectors.toList());
-    }
-
     @GetMapping("/alltoys")
-    public Collection<Toy> allToys() {
+    public Collection<Toy> Toys() {
         return repository.findAll();
     }
 
+    //@GetMapping("/allElectronictoys")
+    @RequestMapping(value = "/allElectronicstoys", method = RequestMethod.GET)
+    public Collection<Toy> allElectonicToys() {
+        return repository.findAll().stream()
+                .filter(this::isElectronicToys)
+                //.filter(x->x.getType().equals("Electronic"))
+                .collect(Collectors.toList());
+    }
     private boolean isElectronicToys(Toy toy) {
         return toy.getType().equals("Electronic");
     }
-
     @GetMapping("/toy/{id}")
     public ResponseEntity<?> getToyById(@PathVariable("id") long id) {
         Optional<Toy> toy = repository.findById(id);
         return toy.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-
-    @GetMapping("/toyByName/{name}")
-    public Collection<Toy> getToyByName(@PathVariable String name) {
-        return repository.findAll().stream().
-                filter(x -> x.getName().equals(name))
-                .collect(Collectors.toList());
-        //lsttoy.stream().map(response -> ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PostMapping("/newToy")
     public ResponseEntity<Toy> addToy(@Valid @RequestBody Toy toy) throws URISyntaxException {
@@ -76,12 +70,9 @@ public class toyController {
     //@CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Toy> updateToy(@Valid @RequestBody Toy toy, @PathVariable("id") long id) {
         log.info("Request for updating new toy {}", toy);
-
         Optional<Toy> toyOptional = repository.findById(id);
-
         if (toyOptional.isEmpty())
             return ResponseEntity.notFound().build();
-
         Toy toy1 = toyOptional.get();
         toy1.setCode(id);
         toy1.setName(toy.getName());
@@ -107,6 +98,15 @@ public class toyController {
 //        BeanUtils.copyProperties(toy, toyc);
 //        Toy result = repository.save(toy);
 //        return ResponseEntity.ok().body(result);
+    }
+
+
+    @GetMapping("/toyByName/{name}")
+    public Collection<Toy> getToyByName(@PathVariable String name) {
+        return repository.findAll().stream().
+                filter(x -> x.getName().equals(name))
+                .collect(Collectors.toList());
+        //lsttoy.stream().map(response -> ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 //    @PutMapping("/updateByName/{id}")
